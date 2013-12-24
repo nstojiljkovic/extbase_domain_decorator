@@ -1,8 +1,7 @@
 TYPO3 Extbase Domain Decorator
 ===========
 
-Extension key: extbase_domain_decorator
-Author: Nikola Stojiljković, Essential Dots d.o.o. Belgrade
+Extension key: extbase_domain_decorator, Author: Nikola Stojiljković, Essential Dots d.o.o. Belgrade
 
 This is a TYPO3 extension which adds support to Extbase framework for decorating of domain objects and domain repositories. Furthermore, it allows registering arbitrary data mapper and storage backend for any Extbase domain model.
 
