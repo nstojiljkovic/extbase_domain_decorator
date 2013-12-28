@@ -70,19 +70,19 @@ class DecoratorManager implements \TYPO3\CMS\Core\SingletonInterface {
 	 * @param $className
 	 * @param string $backendClassName
 	 * @param string $dataMapFactoryClassName
-	 * @throws InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 */
 	public function registerBackendAndDataMapFactory($className, $backendClassName = '', $dataMapFactoryClassName = '') {
 		$className = ltrim($className, '\\');
 		$backendClassName = ltrim($backendClassName, '\\');
 		$dataMapFactoryClassName = ltrim($dataMapFactoryClassName, '\\');
 
-		if ($this->registeredBackendClasses[$className]) {
-			throw new InvalidArgumentException(sprintf('The $className "%s" has already a registered backend class.', $className));
+		if ($this->registeredBackendClasses[$className] && $this->registeredBackendClasses[$className] != $backendClassName) {
+			throw new \InvalidArgumentException(sprintf('The $className "%s" has already a registered backend class.', $className));
 		}
 
-		if ($this->registeredDataMapFactoryClasses[$className]) {
-			throw new InvalidArgumentException(sprintf('The $className "%s" has already a registered data map factory class.', $className));
+		if ($this->registeredDataMapFactoryClasses[$className] && $this->registeredDataMapFactoryClasses[$className] != $dataMapFactoryClassName) {
+			throw new \InvalidArgumentException(sprintf('The $className "%s" has already a registered data map factory class.', $className));
 		}
 
 		$this->registeredBackendClasses[$className] = $backendClassName;
@@ -106,25 +106,28 @@ class DecoratorManager implements \TYPO3\CMS\Core\SingletonInterface {
 	/**
 	 * @param $className
 	 * @param $decoratorClassName
-	 * @throws InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 */
 	public function registerDecorator($className, $decoratorClassName) {
 		$className = ltrim($className, '\\');
 		$decoratorClassName = ltrim($decoratorClassName, '\\');
 
 		if ($this->decorators[$decoratorClassName]) {
-			throw new InvalidArgumentException(sprintf('The $decoratorClassName "%s" has already been registered as a base class.', $decoratorClassName));
+			throw new \InvalidArgumentException(sprintf('The $decoratorClassName "%s" has already been registered as a base class.', $decoratorClassName));
 		}
 
-		if ($this->registeredDecoratorClasses[$className]) {
-			throw new InvalidArgumentException(sprintf('The $className "%s" has already been registered as a decorator class.', $className));
+		if ($this->registeredDecoratorClasses[$className] && $this->registeredDecoratorClasses[$className] != $this->getBaseClassName($className)) {
+			throw new \InvalidArgumentException(sprintf('The $className "%s" has already been registered as a decorator class.', $className));
 		}
-		$this->registeredDecoratorClasses[$decoratorClassName] = $this->getBaseClassName($className);
 
-		if (!$this->decorators[$className]) {
-			$this->decorators[$className] = array();
+		if (!$this->registeredDecoratorClasses[$className]) {
+			$this->registeredDecoratorClasses[$decoratorClassName] = $this->getBaseClassName($className);
+
+			if (!$this->decorators[$className]) {
+				$this->decorators[$className] = array();
+			}
+			$this->decorators[$className][] = $decoratorClassName;
 		}
-		$this->decorators[$className][] = $decoratorClassName;
 	}
 
 	/**
