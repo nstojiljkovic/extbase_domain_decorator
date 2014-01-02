@@ -29,6 +29,11 @@ namespace EssentialDots\ExtbaseDomainDecorator\Domain\Repository;
 class FrontendGroupRepository extends \EssentialDots\ExtbaseDomainDecorator\Persistence\AbstractRepository {
 
 	/**
+	 * @var array<\EssentialDots\ExtbaseDomainDecorator\Domain\Model\AbstractFrontendGroup>
+	 */
+	protected $_currentFrontendGroups = array();
+
+	/**
 	 * Injects query settings object.
 	 *
 	 * @param \TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface $querySettings The Query Settings
@@ -37,5 +42,33 @@ class FrontendGroupRepository extends \EssentialDots\ExtbaseDomainDecorator\Pers
 	public function injectQuerySettings(\TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface $querySettings) {
 		$querySettings->setRespectStoragePage(FALSE);
 		$this->setDefaultQuerySettings($querySettings);
+	}
+
+	/**
+	 * @param bool $useCache
+	 * @return array<\EssentialDots\ExtbaseDomainDecorator\Domain\Model\AbstractFrontendGroup>
+	 */
+	public function getCurrentFrontendGroups($useCache = true) {
+		if (!$this->_currentFrontendGroups || !$useCache) {
+			if ($GLOBALS['TSFE']->fe_user->groupData && $GLOBALS['TSFE']->fe_user->groupData['uid']) {
+				foreach($GLOBALS['TSFE']->fe_user->groupData['uid'] as $uid) {
+					$userGroup = $this->findByUid($uid);
+					if ($userGroup) {
+						$this->_currentFrontendGroups[] = $userGroup;
+					}
+				}
+			} else {
+				$this->_currentFrontendGroups = array();
+			}
+		}
+
+		return $this->_currentFrontendGroups;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getCurrentFrontendGroupUids() {
+		return $GLOBALS['TSFE']->fe_user->groupData['uid'] ? $GLOBALS['TSFE']->fe_user->groupData['uid'] : array();
 	}
 }

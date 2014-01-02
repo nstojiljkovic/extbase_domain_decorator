@@ -29,6 +29,11 @@ namespace EssentialDots\ExtbaseDomainDecorator\Domain\Repository;
 class FrontendUserRepository extends \EssentialDots\ExtbaseDomainDecorator\Persistence\AbstractRepository {
 
 	/**
+	 * @var \EssentialDots\ExtbaseDomainDecorator\Domain\Model\AbstractFrontendUser
+	 */
+	protected $_currentFrontendUser;
+
+	/**
 	 * Injects query settings object.
 	 *
 	 * @param \TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface $querySettings The Query Settings
@@ -40,13 +45,18 @@ class FrontendUserRepository extends \EssentialDots\ExtbaseDomainDecorator\Persi
 	}
 
 	/**
-	 * @return null|\EssentialDots\ExtbaseDomainDecorator\Domain\Model\AbstractFrontendUser
+	 * @param bool $useCache
+	 * @return null|\EssentialDots\ExtbaseDomainDecorator\Domain\Model\AbstractFrontendUser|\EssentialDots\ExtbaseDomainDecorator\Domain\Model\FrontendUser
 	 */
-	public function getCurrentFrontendUser() {
-		if ($GLOBALS['TSFE']->fe_user->user['uid']) {
-			return $this->findByUid($GLOBALS['TSFE']->fe_user->user['uid']);
-		} else {
-			return null;
+	public function getCurrentFrontendUser($useCache = true) {
+		if (!$this->_currentFrontendUser || !$useCache) {
+			if ($GLOBALS['TSFE']->fe_user->user['uid']) {
+				$this->_currentFrontendUser = $this->findByUid($GLOBALS['TSFE']->fe_user->user['uid']);
+			} else {
+				$this->_currentFrontendUser = null;
+			}
 		}
+
+		return $this->_currentFrontendUser;
 	}
 }
