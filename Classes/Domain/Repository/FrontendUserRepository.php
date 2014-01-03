@@ -46,7 +46,7 @@ class FrontendUserRepository extends \EssentialDots\ExtbaseDomainDecorator\Persi
 
 	/**
 	 * @param bool $useCache
-	 * @return null|\EssentialDots\ExtbaseDomainDecorator\Domain\Model\AbstractFrontendUser|\EssentialDots\ExtbaseDomainDecorator\Domain\Model\FrontendUser
+	 * @return null|\EssentialDots\ExtbaseDomainDecorator\Domain\Model\AbstractFrontendUser|\EssentialDots\ExtbaseDomainDecorator\Domain\Model\FrontendUser|\EssentialDots\EdTravel\Domain\Model\FrontendUserWithPermissionSets
 	 */
 	public function getCurrentFrontendUser($useCache = true) {
 		if (!$this->_currentFrontendUser || !$useCache) {
