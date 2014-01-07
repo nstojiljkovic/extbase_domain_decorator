@@ -30,6 +30,11 @@ namespace EssentialDots\ExtbaseDomainDecorator\Reflection;
 class Service extends \TYPO3\CMS\Extbase\Reflection\ReflectionService {
 
 	/**
+	 * @var \TYPO3\CMS\Extbase\SignalSlot\Dispatcher
+	 */
+	protected $signalSlotDispatcher;
+
+	/**
 	 * @var \EssentialDots\ExtbaseDomainDecorator\Decorator\DecoratorManager
 	 */
 	protected $decoratorManager;
@@ -41,6 +46,7 @@ class Service extends \TYPO3\CMS\Extbase\Reflection\ReflectionService {
 	public function injectObjectManager(\TYPO3\CMS\Extbase\Object\ObjectManagerInterface $objectManager) {
 		$this->objectManager = $objectManager;
 		$this->decoratorManager = $this->objectManager->get('EssentialDots\\ExtbaseDomainDecorator\\Decorator\\DecoratorManager');
+		$this->signalSlotDispatcher = $this->objectManager->get('TYPO3\\CMS\\Extbase\\SignalSlot\\Dispatcher');
 	}
 
 	/**
@@ -90,6 +96,8 @@ class Service extends \TYPO3\CMS\Extbase\Reflection\ReflectionService {
 			foreach ($this->decoratorManager->getDecoratorsForClassName($decoratedClassName) as $decoratorClassName) {
 				$this->classSchemata[$decoratorClassName] = $classSchema;
 			}
+
+			$this->signalSlotDispatcher->dispatch(__CLASS__, 'afterBuildClassSchema', array($classSchema));
 		}
 
 		return $classSchema;

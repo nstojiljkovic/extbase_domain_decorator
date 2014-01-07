@@ -1,6 +1,7 @@
 <?php
 
 namespace EssentialDots\ExtbaseDomainDecorator\Persistence\Mapper;
+use EssentialDots\ExtbaseDomainDecorator\Persistence\Mapper\Exception;
 
 /***************************************************************
  *  Copyright notice
@@ -77,6 +78,22 @@ class DataMapper extends \TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMappe
 		return $object;
 	}
 
+	/**
+	 * @param $object
+	 * @throws Exception\ObjectNotFoundInDBException
+	 */
+	public function reloadObjectFromDB($object) {
+		$tableName = $this->getDataMap(get_class($object))->getTableName();
+		$enableFields = $this->getEnableFields($tableName);
+		$uid = $this->getDatabase()->fullQuoteStr($object->getUid(), $tableName);
+		$res = $this->getDatabase()->sql_query("SELECT * FROM $tableName WHERE uid = $uid $enableFields");
+		if ($res && $row = $this->getDatabase()->sql_fetch_assoc($res)) {
+			$this->thawProperties($object, $row);
+			$object->_memorizeCleanState();
+		} else {
+			throw new Exception\ObjectNotFoundInDBException('Object not found in DB', 9886423);
+		}
+	}
 
 	/**
 	 * Returns the type of a child object.
@@ -115,5 +132,32 @@ class DataMapper extends \TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMappe
 			}
 		}
 		return $constraint;
+	}
+
+	/**
+	 * @return \TYPO3\CMS\Core\Database\DatabaseConnection
+	 */
+	protected function getDatabase() {
+		return $GLOBALS['TYPO3_DB'];
+	}
+
+	/**
+	 * @param string $table
+	 * @param string $alias
+	 *
+	 * @return string
+	 */
+	protected function getEnableFields($table, $alias = '') {
+		$enableFields = \TYPO3\CMS\Backend\Utility\BackendUtility::BEenableFields ( $table );
+		if (trim($enableFields) == 'AND') {
+			$enableFields = '';
+		}
+		$enableFields .= \TYPO3\CMS\Backend\Utility\BackendUtility::deleteClause( $table );
+
+		if ($alias) {
+			$enableFields = str_replace($table.'.', $alias.'.', $enableFields);
+		}
+
+		return $enableFields;
 	}
 }
