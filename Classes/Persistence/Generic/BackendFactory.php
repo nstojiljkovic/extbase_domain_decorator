@@ -31,7 +31,6 @@ class BackendFactory implements \TYPO3\CMS\Core\SingletonInterface {
 
 	/**
 	 * @var \TYPO3\CMS\Extbase\Persistence\Generic\BackendInterface
-	 * @inject
 	 */
 	protected $backend;
 
@@ -56,6 +55,14 @@ class BackendFactory implements \TYPO3\CMS\Core\SingletonInterface {
 	 * @var \TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface
 	 */
 	protected $persistenceManager;
+
+	/**
+	 * @param \TYPO3\CMS\Extbase\Persistence\Generic\BackendInterface $backend
+	 */
+	public function injectBackend(\TYPO3\CMS\Extbase\Persistence\Generic\BackendInterface $backend) {
+		$this->backend = $backend;
+		$this->backends[get_class($backend)] = $backend;
+	}
 
 	/**
 	 * @param string $objectType
