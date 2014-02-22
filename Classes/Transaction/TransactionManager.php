@@ -78,4 +78,17 @@ class TransactionManager implements SingletonInterface {
 	protected function getDatabase() {
 		return $GLOBALS['TYPO3_DB'];
 	}
+
+	/**
+	 * Destructor:
+	 * Releases lock automatically when instance is destroyed.
+	 *
+	 * @return	void
+	 */
+	public function __destruct() {
+		if ($this->transactionsInProcessCount > 0) {
+			$this->getDatabase()->sql_query('ROLLBACK;');
+			error_log('Something strange happened, there are still transactions in process which have not been committed or rolled back. Rolling back now...');
+		}
+	}
 }
