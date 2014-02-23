@@ -89,7 +89,9 @@ abstract class AbstractEntity extends \TYPO3\CMS\Extbase\DomainObject\AbstractEn
 		if ($this->_decoratedObject) {
 			return call_user_func_array(array($this->_decoratedObject, $name), $arguments);
 		} else {
-			error_log("Method doesn't exists ".get_class($this)."::".$name);
+			if (strpos($name, 'get_')!==0) {
+				error_log("Method doesn't exists ".get_class($this)."::".$name);
+			}
 			return null;
 		}
 	}
