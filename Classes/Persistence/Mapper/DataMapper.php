@@ -160,4 +160,26 @@ class DataMapper extends \TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMappe
 
 		return $enableFields;
 	}
+
+	/**
+	 * Sets the given properties on the object.
+	 *
+	 * @param \TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface $object The object to set properties on
+	 * @param array $row
+	 * @return void
+	 */
+	protected function thawProperties(\TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface $object, array $row) {
+		parent::thawProperties($object, $row);
+		$className = get_class($object);
+		$dataMap = $this->getDataMap($className);
+		$object->_setProperty('uid', $row['uid']);
+		$object->_setProperty('pid', $row['pid']);
+		$object->_setProperty('_localizedUid', $row['uid']);
+		if ($dataMap->getLanguageIdColumnName() !== NULL) {
+			$object->_setProperty('_languageUid', $row[$dataMap->getLanguageIdColumnName()]);
+			if (isset($row['_LOCALIZED_UID'])) {
+				$object->_setProperty('_localizedUid', $row['_LOCALIZED_UID']);
+			}
+		}
+	}
 }
