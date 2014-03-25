@@ -26,6 +26,6 @@ namespace EssentialDots\ExtbaseDomainDecorator\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-abstract class AbstractFrontendUser extends \EssentialDots\ExtbaseDomainDecorator\DomainObject\AbstractEntity {
+class AbstractFrontendUser extends \EssentialDots\ExtbaseDomainDecorator\DomainObject\AbstractEntity {
 
 }

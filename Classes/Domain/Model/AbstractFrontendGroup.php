@@ -26,6 +26,6 @@ namespace EssentialDots\ExtbaseDomainDecorator\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-abstract class AbstractFrontendGroup extends \EssentialDots\ExtbaseDomainDecorator\DomainObject\AbstractEntity {
+class AbstractFrontendGroup extends \EssentialDots\ExtbaseDomainDecorator\DomainObject\AbstractEntity {
 
 }
