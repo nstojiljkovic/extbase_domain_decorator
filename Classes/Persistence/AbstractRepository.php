@@ -147,7 +147,7 @@ abstract class AbstractRepository extends \TYPO3\CMS\Extbase\Persistence\Reposit
 
 		$decoratedClass = $this->decoratorManager->getDecoratedClass(get_class($object));
 
-		if (!is_subclass_of($decoratedClass, $this->objectType) && $decoratedClass != ltrim($this->objectType, '\\')) {
+		if (!is_subclass_of($decoratedClass, $this->objectType) && !is_subclass_of($this->objectType, $decoratedClass) && $decoratedClass != ltrim($this->objectType, '\\')) {
 			throw new \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException('The object given to add() was not of the type (' . $this->objectType . ') this repository manages.', 1248363335);
 		}
 
@@ -169,7 +169,7 @@ abstract class AbstractRepository extends \TYPO3\CMS\Extbase\Persistence\Reposit
 
 		$decoratedClass = $this->decoratorManager->getDecoratedClass(get_class($object));
 
-		if (!is_subclass_of($decoratedClass, $this->objectType) && $decoratedClass != ltrim($this->objectType, '\\')) {
+		if (!is_subclass_of($decoratedClass, $this->objectType) && !is_subclass_of($this->objectType, $decoratedClass) && $decoratedClass != ltrim($this->objectType, '\\')) {
 			throw new \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException('The object given to remove() was not of the type (' . $this->objectType . ') this repository manages.', 1248363335);
 		}
 
@@ -189,7 +189,7 @@ abstract class AbstractRepository extends \TYPO3\CMS\Extbase\Persistence\Reposit
 
 		$decoratedClass = $this->decoratorManager->getDecoratedClass(get_class($modifiedObject));
 
-		if (!is_subclass_of($decoratedClass, $this->objectType) && $decoratedClass != ltrim($this->objectType, '\\')) {
+		if (!is_subclass_of($decoratedClass, $this->objectType) && !is_subclass_of($this->objectType, $decoratedClass) && $decoratedClass != ltrim($this->objectType, '\\')) {
 			throw new \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException('The modified object given to update() was not of the type (' . $this->objectType . ') this repository manages.', 1249479625);
 		}
 

@@ -317,7 +317,7 @@ abstract class AbstractEntity extends \TYPO3\CMS\Extbase\DomainObject\AbstractEn
 	 * @throws \TYPO3\CMS\Extbase\Persistence\Generic\Exception\TooDirtyException
 	 */
 	public function _isDirty($propertyName = NULL) {
-		if ($this->uid !== NULL && is_array($this->_cleanProperties) && $this->uid != $this->_getCleanProperty('uid')) throw new \TYPO3\CMS\Extbase\Persistence\Generic\Exception\TooDirtyException('The uid "' . $this->uid . '" has been modified, that is simply too much.', 1222871239);
+		if ($this->uid !== NULL && is_array($this->_cleanProperties) && $this->uid != $this->_getCleanProperty('uid') && $this->_getCleanProperty('uid') != NULL) throw new \TYPO3\CMS\Extbase\Persistence\Generic\Exception\TooDirtyException('The uid "' . $this->uid . '" has been modified, that is simply too much.', 1222871239);
 		if ($propertyName === NULL) {
 			foreach ($this->_getCleanProperties() as $propertyName => $cleanPropertyValue) {
 				if ($this->isPropertyDirty($cleanPropertyValue, $this->$propertyName) === TRUE) return TRUE;
