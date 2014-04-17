@@ -52,7 +52,7 @@ class FrontendGroup extends AbstractFrontendGroup {
 	 * @param $decoratedObject
 	 */
 	public function __construct($decoratedObject = NULL) {
-		$this->_decoratedObject = $decoratedObject;
+		parent::__construct($decoratedObject);
 		$this->subgroup = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
 	}
 

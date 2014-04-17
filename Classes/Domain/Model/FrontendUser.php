@@ -132,7 +132,7 @@ class FrontendUser extends AbstractFrontendUser {
 	 * @param $decoratedObject
 	 */
 	public function __construct($decoratedObject = NULL) {
-		$this->_decoratedObject = $decoratedObject;
+		parent::__construct($decoratedObject);
 		$this->usergroup = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
 	}
 

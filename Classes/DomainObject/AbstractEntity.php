@@ -32,17 +32,17 @@ abstract class AbstractEntity extends \TYPO3\CMS\Extbase\DomainObject\AbstractEn
 	/**
 	 * @var \TYPO3\CMS\Extbase\DomainObject\AbstractDomainObject
 	 */
-	private $_decoratedObject;
+	private $_decoratedObject = NULL;
 
 	/**
 	 * @var An array holding the clean property values. Set right after reconstitution of the object
 	 */
-	private $_cleanProperties;
+	private $_cleanProperties = array();
 
 	/**
 	 * @param $decoratedObject
 	 */
-	public function __construct($decoratedObject = NULL) {
+	public function __construct(\TYPO3\CMS\Extbase\DomainObject\AbstractEntity $decoratedObject = NULL) {
 		$this->_decoratedObject = $decoratedObject;
 	}
 
