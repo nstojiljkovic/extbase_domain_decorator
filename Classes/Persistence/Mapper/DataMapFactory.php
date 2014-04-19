@@ -40,20 +40,11 @@ class DataMapFactory extends \TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataM
 	protected $dataMapFactories = array();
 
 	/**
-	 * @param \EssentialDots\ExtbaseDomainDecorator\Decorator\DecoratorManager $decoratorManager
-	 * @return void
-	 */
-	public function injectDecoratorManager(\EssentialDots\ExtbaseDomainDecorator\Decorator\DecoratorManager $decoratorManager) {
-		$this->decoratorManager = $decoratorManager;
-	}
-
-	/**
 	 * @param \TYPO3\CMS\Extbase\Object\ObjectManagerInterface $objectManager
 	 * @return void
 	 */
 	public function injectObjectManager(\TYPO3\CMS\Extbase\Object\ObjectManagerInterface $objectManager) {
 		$this->objectManager = $objectManager;
-		$this->decoratorManager = $this->objectManager->get('EssentialDots\\ExtbaseDomainDecorator\\Decorator\\DecoratorManager');
 	}
 
 	/**
@@ -65,8 +56,8 @@ class DataMapFactory extends \TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataM
 	 * @return \TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper The data map
 	 */
 	public function buildDataMap($className) {
-		$objectType = $this->decoratorManager->getDecoratedClass($className);
-		$dataMapFactoryClassName = $this->decoratorManager->getDataMapFactoryClassNameForObjectType($objectType);
+		$objectType = $this->getDecoratorManager()->getDecoratedClass($className);
+		$dataMapFactoryClassName = $this->getDecoratorManager()->getDataMapFactoryClassNameForObjectType($objectType);
 		if ($dataMapFactoryClassName && !$this->dataMapFactories[$dataMapFactoryClassName]) {
 			$this->dataMapFactories[$dataMapFactoryClassName] = $this->objectManager->get($dataMapFactoryClassName);
 		}
@@ -77,5 +68,16 @@ class DataMapFactory extends \TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataM
 			$dataMap = parent::buildDataMap($objectType);
 		}
 		return $dataMap;
+	}
+
+	/**
+	 * @return \EssentialDots\ExtbaseDomainDecorator\Decorator\DecoratorManager
+	 */
+	protected function getDecoratorManager() {
+		if (!$this->decoratorManager) {
+			$this->decoratorManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager')->get('EssentialDots\\ExtbaseDomainDecorator\\Decorator\\DecoratorManager');
+		}
+
+		return $this->decoratorManager;
 	}
 }

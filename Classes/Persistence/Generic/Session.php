@@ -35,16 +35,6 @@ class Session extends \TYPO3\CMS\Extbase\Persistence\Generic\Session {
 	protected $decoratorManager;
 
 	/**
-	 * Injects the decorator manager
-	 *
-	 * @param \EssentialDots\ExtbaseDomainDecorator\Decorator\DecoratorManager $decoratorManager
-	 * @return void
-	 */
-	public function injectDecoratorManager(\EssentialDots\ExtbaseDomainDecorator\Decorator\DecoratorManager $decoratorManager) {
-		$this->decoratorManager = $decoratorManager;
-	}
-
-	/**
 	 * Injects a Reflection Service instance
 	 *
 	 * @param \TYPO3\CMS\Extbase\Reflection\ReflectionService $reflectionService
@@ -52,7 +42,6 @@ class Session extends \TYPO3\CMS\Extbase\Persistence\Generic\Session {
 	 */
 	public function injectReflectionService(\TYPO3\CMS\Extbase\Reflection\ReflectionService $reflectionService) {
 		$this->reflectionService = $reflectionService;
-		$this->decoratorManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager')->get('EssentialDots\\ExtbaseDomainDecorator\\Decorator\\DecoratorManager');
 	}
 
 	/**
@@ -63,7 +52,7 @@ class Session extends \TYPO3\CMS\Extbase\Persistence\Generic\Session {
 	 * @return boolean
 	 */
 	public function hasIdentifier($identifier, $className) {
-		$className = $this->decoratorManager->getDecoratedClass($className);
+		$className = $this->getDecoratorManager()->getDecoratedClass($className);
 
 		return isset($this->identifierMap[strtolower($className)][$identifier]);
 	}
@@ -77,7 +66,7 @@ class Session extends \TYPO3\CMS\Extbase\Persistence\Generic\Session {
 	 * @api
 	 */
 	public function getObjectByIdentifier($identifier, $className) {
-		$className = $this->decoratorManager->getDecoratedClass($className);
+		$className = $this->getDecoratorManager()->getDecoratedClass($className);
 
 		return $this->identifierMap[strtolower($className)][$identifier];
 	}
@@ -91,7 +80,7 @@ class Session extends \TYPO3\CMS\Extbase\Persistence\Generic\Session {
 	 */
 	public function registerObject($object, $identifier) {
 		$this->objectMap[$object] = $identifier;
-		$className = $this->decoratorManager->getDecoratedClass(get_class($object));
+		$className = $this->getDecoratorManager()->getDecoratedClass(get_class($object));
 		$this->identifierMap[strtolower($className)][$identifier] = $object;
 	}
 
@@ -102,9 +91,20 @@ class Session extends \TYPO3\CMS\Extbase\Persistence\Generic\Session {
 	 * @return void
 	 */
 	public function unregisterObject($object) {
-		$className = $this->decoratorManager->getDecoratedClass(get_class($object));
+		$className = $this->getDecoratorManager()->getDecoratedClass(get_class($object));
 		unset($this->identifierMap[strtolower($className)][$this->objectMap[$object]]);
 		$this->objectMap->detach($object);
+	}
+
+	/**
+	 * @return \EssentialDots\ExtbaseDomainDecorator\Decorator\DecoratorManager
+	 */
+	protected function getDecoratorManager() {
+		if (!$this->decoratorManager) {
+			$this->decoratorManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager')->get('EssentialDots\\ExtbaseDomainDecorator\\Decorator\\DecoratorManager');
+		}
+
+		return $this->decoratorManager;
 	}
 }
 ?>

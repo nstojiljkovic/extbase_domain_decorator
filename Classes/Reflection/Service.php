@@ -45,8 +45,6 @@ class Service extends \TYPO3\CMS\Extbase\Reflection\ReflectionService {
 	 */
 	public function injectObjectManager(\TYPO3\CMS\Extbase\Object\ObjectManagerInterface $objectManager) {
 		$this->objectManager = $objectManager;
-		$this->decoratorManager = $this->objectManager->get('EssentialDots\\ExtbaseDomainDecorator\\Decorator\\DecoratorManager');
-		$this->signalSlotDispatcher = $this->objectManager->get('TYPO3\\CMS\\Extbase\\SignalSlot\\Dispatcher');
 	}
 
 	/**
@@ -61,7 +59,7 @@ class Service extends \TYPO3\CMS\Extbase\Reflection\ReflectionService {
 			// find implementation class name for the required class name
 		$implementationClassName = $objectContainer->getImplementationClassName($className);
 			// find decorated class name for the implementation class
-		$decoratedClassName = $this->decoratorManager->getDecoratedClass($implementationClassName);
+		$decoratedClassName = $this->getDecoratorManager()->getDecoratedClass($implementationClassName);
 			// find implementation class name for the decorated class name
 		$implementationClassName = $objectContainer->getImplementationClassName($decoratedClassName);
 
@@ -72,7 +70,7 @@ class Service extends \TYPO3\CMS\Extbase\Reflection\ReflectionService {
 			$classSchema = parent::buildClassSchema($implementationClassName);
 
 			// add properties of all decorators to the decorated class schemata
-			foreach ($this->decoratorManager->getDecoratorsForClassName($decoratedClassName) as $decoratorClassName) {
+			foreach ($this->getDecoratorManager()->getDecoratorsForClassName($decoratedClassName) as $decoratorClassName) {
 				foreach ($this->getClassPropertyNames($decoratorClassName) as $propertyName) {
 					if (!$classSchema->hasProperty($propertyName)) {
 						if (!$this->isPropertyTaggedWith($decoratorClassName, $propertyName, 'transient') && $this->isPropertyTaggedWith($decoratorClassName, $propertyName, 'var')) {
@@ -92,14 +90,35 @@ class Service extends \TYPO3\CMS\Extbase\Reflection\ReflectionService {
 			// cache schemata for decorated and all decorator classes
 			$this->classSchemata[$implementationClassName] = $classSchema;
 			$this->classSchemata[$decoratedClassName] = $classSchema;
-			$this->classSchemata[$this->decoratorManager->getBaseClassName($decoratedClassName)] = $classSchema;
-			foreach ($this->decoratorManager->getDecoratorsForClassName($decoratedClassName) as $decoratorClassName) {
+			$this->classSchemata[$this->getDecoratorManager()->getBaseClassName($decoratedClassName)] = $classSchema;
+			foreach ($this->getDecoratorManager()->getDecoratorsForClassName($decoratedClassName) as $decoratorClassName) {
 				$this->classSchemata[$decoratorClassName] = $classSchema;
 			}
 
-			$this->signalSlotDispatcher->dispatch(__CLASS__, 'afterBuildClassSchema', array($classSchema));
+			$this->getSignalSlotDispatcher()->dispatch(__CLASS__, 'afterBuildClassSchema', array($classSchema));
 		}
 
 		return $classSchema;
+	}
+
+	/**
+	 * @return \EssentialDots\ExtbaseDomainDecorator\Decorator\DecoratorManager
+	 */
+	protected function getDecoratorManager() {
+		if (!$this->decoratorManager) {
+			$this->decoratorManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager')->get('EssentialDots\\ExtbaseDomainDecorator\\Decorator\\DecoratorManager');
+		}
+
+		return $this->decoratorManager;
+	}
+
+	/**
+	 * @return \TYPO3\CMS\Extbase\SignalSlot\Dispatcher
+	 */
+	protected function getSignalSlotDispatcher() {
+		if (!$this->signalSlotDispatcher) {
+			$this->signalSlotDispatcher = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager')->get('TYPO3\\CMS\\Extbase\\SignalSlot\\Dispatcher');
+		}
+		return $this->signalSlotDispatcher;
 	}
 }
