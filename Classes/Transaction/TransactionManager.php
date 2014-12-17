@@ -48,7 +48,9 @@ class TransactionManager implements SingletonInterface {
 	 */
 	public function startTransaction() {
 		if ($this->transactionsInProcessCount++ === 0) {
-			$this->getDatabase()->sql_query('START TRANSACTION;');
+			if (!$this->getDatabase()->sql_query('START TRANSACTION;')) {
+				throw new \RuntimeException('Could not start transaction, error: ' . $this->getDatabase()->sql_errno() . ', ' . $this->getDatabase()->sql_error());
+			}
 		}
 	}
 
@@ -57,7 +59,9 @@ class TransactionManager implements SingletonInterface {
 	 */
 	public function commitTransaction() {
 		if (--$this->transactionsInProcessCount === 0) {
-			$this->getDatabase()->sql_query('COMMIT;');
+			if (!$this->getDatabase()->sql_query('COMMIT;')) {
+				throw new \RuntimeException('Could not commit, error: ' . $this->getDatabase()->sql_errno() . ', ' . $this->getDatabase()->sql_error());
+			}
 		}
 	}
 
@@ -66,7 +70,9 @@ class TransactionManager implements SingletonInterface {
 	 */
 	public function rollbackTransaction() {
 		if (--$this->transactionsInProcessCount === 0) {
-			$this->getDatabase()->sql_query('ROLLBACK;');
+			if (!$this->getDatabase()->sql_query('ROLLBACK;')) {
+				throw new \RuntimeException('Could not rollback transaction, error: ' . $this->getDatabase()->sql_errno() . ', ' . $this->getDatabase()->sql_error());
+			}
 		}
 	}
 
@@ -85,8 +91,10 @@ class TransactionManager implements SingletonInterface {
 	 */
 	public function __destruct() {
 		if ($this->transactionsInProcessCount > 0) {
-			$this->getDatabase()->sql_query('ROLLBACK;');
 			error_log('Something strange happened, there are still transactions in process which have not been committed or rolled back. Rolling back now...');
+			if (!$this->getDatabase()->sql_query('ROLLBACK;')) {
+				throw new \RuntimeException('Could not rollback transaction, error: ' . $this->getDatabase()->sql_errno() . ', ' . $this->getDatabase()->sql_error());
+			}
 		}
 	}
 }
