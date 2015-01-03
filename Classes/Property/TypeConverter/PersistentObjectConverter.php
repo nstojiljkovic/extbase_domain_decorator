@@ -5,19 +5,17 @@ namespace EssentialDots\ExtbaseDomainDecorator\Property\TypeConverter;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2013 Nikola Stojiljkovic, Essential Dots d.o.o. Belgrade
+ *  (c) 2014 Essential Dots d.o.o. Belgrade
  *  All rights reserved
  *
- *  This script is part of the Typo3 project. The Typo3 project is
+ *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
+ *  the Free Software Foundation; either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  The GNU General Public License can be found at
  *  http://www.gnu.org/copyleft/gpl.html.
- *  A copy is found in the textfile GPL.txt and important notices to the license
- *  from the author is found in LICENSE.txt distributed with these scripts.
  *
  *  This script is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -71,11 +69,10 @@ class PersistentObjectConverter extends \TYPO3\CMS\Extbase\Property\TypeConverte
 	 */
 	public function canConvertFrom($source, $targetType) {
 		$targetType = $this->objectContainer->getImplementationClassName($targetType);
-		$delimiter = strpos($targetType, '_') !== FALSE ? '_' : '\\';
-		$targetRepositoryType = str_replace($delimiter.'Domain'.$delimiter.'Model'.$delimiter, $delimiter.'Domain'.$delimiter.'Repository'.$delimiter, $targetType).'Repository';
+		$targetRepositoryType = $this->getRepositoryClassName($targetType);
 		$isValueObject = is_subclass_of($targetType, 'TYPO3\\CMS\\Extbase\\DomainObject\\AbstractValueObject');
 		$isEntity = is_subclass_of($targetType, 'TYPO3\\CMS\\Extbase\\DomainObject\\AbstractEntity');
-		return class_exists($targetRepositoryType) && ($isEntity || $isValueObject);
+		return $targetRepositoryType && ($isEntity || $isValueObject);
 	}
 
 	/**
@@ -90,8 +87,7 @@ class PersistentObjectConverter extends \TYPO3\CMS\Extbase\Property\TypeConverte
 	protected function fetchObjectFromPersistence($identity, $targetType) {
 		if (is_numeric($identity)) {
 			$targetType = $this->objectContainer->getImplementationClassName($targetType);
-			$delimiter = strpos($targetType, '_') !== FALSE ? '_' : '\\';
-			$targetRepositoryType = str_replace($delimiter.'Domain'.$delimiter.'Model'.$delimiter, $delimiter.'Domain'.$delimiter.'Repository'.$delimiter, $targetType).'Repository';
+			$targetRepositoryType = $this->getRepositoryClassName($targetType);
 			/* @var $targetRepository \TYPO3\CMS\Extbase\Persistence\Repository */
 			$targetRepository = $this->objectManager->get($targetRepositoryType);
 			$object = $targetRepository->findByUid($identity);
@@ -100,10 +96,25 @@ class PersistentObjectConverter extends \TYPO3\CMS\Extbase\Property\TypeConverte
 		}
 
 		if ($identity && $object === NULL) {
-			throw new \TYPO3\CMS\Extbase\Property\Exception\TargetNotFoundException('Object with identity "' . print_r($identity, TRUE) . '" not found.', 1297933823);
+			throw new \TYPO3\CMS\Extbase\Property\Exception\TargetNotFoundException('Object with identity "' . var_export($identity, TRUE) . '" not found.', 1297933823);
 		}
 
 		return $object;
 	}
+
+	/**
+	 * @param string
+	 * @return string|NULL
+	 */
+	protected function getRepositoryClassName($targetType) {
+		$found = FALSE;
+		while (!$found && $targetType) {
+			$delimiter = strpos($targetType, '_') !== FALSE ? '_' : '\\';
+			$targetRepositoryType = str_replace($delimiter . 'Domain' . $delimiter . 'Model' . $delimiter, $delimiter . 'Domain' . $delimiter . 'Repository' . $delimiter, $targetType) . 'Repository';
+			$targetType = get_parent_class($targetType);
+			$found = class_exists($targetRepositoryType);
+		}
+
+		return $found ? $targetRepositoryType : NULL;
+	}
 }
-?>

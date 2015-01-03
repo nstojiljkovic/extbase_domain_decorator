@@ -5,19 +5,17 @@ namespace EssentialDots\ExtbaseDomainDecorator\Object;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2013 Nikola Stojiljkovic, Essential Dots d.o.o. Belgrade
+ *  (c) 2014 Essential Dots d.o.o. Belgrade
  *  All rights reserved
  *
- *  This script is part of the Typo3 project. The Typo3 project is
+ *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
+ *  the Free Software Foundation; either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  The GNU General Public License can be found at
  *  http://www.gnu.org/copyleft/gpl.html.
- *  A copy is found in the textfile GPL.txt and important notices to the license
- *  from the author is found in LICENSE.txt distributed with these scripts.
  *
  *  This script is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,6 +25,11 @@ namespace EssentialDots\ExtbaseDomainDecorator\Object;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+/**
+ * Class ObjectManager
+ *
+ * @package EssentialDots\ExtbaseDomainDecorator\Object
+ */
 class ObjectManager extends \TYPO3\CMS\Extbase\Object\ObjectManager {
 
 	/**
@@ -44,7 +47,7 @@ class ObjectManager extends \TYPO3\CMS\Extbase\Object\ObjectManager {
 	 */
 	public function __construct() {
 		parent::__construct();
-		$this->decoratorManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('EssentialDots\\ExtbaseDomainDecorator\\Decorator\\DecoratorManager'); // Singleton
+		$this->decoratorManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('EssentialDots\\ExtbaseDomainDecorator\\Decorator\\DecoratorManager');
 		$this->lastDecoratorMapping = new \TYPO3\CMS\Extbase\Persistence\ObjectStorage();
 	}
 
@@ -97,7 +100,7 @@ class ObjectManager extends \TYPO3\CMS\Extbase\Object\ObjectManager {
 	 * @param $instance
 	 * @param $objectName
 	 * @return \EssentialDots\ExtbaseDomainDecorator\Persistence\AbstractRepository|object
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	public function decorateObject($instance, $objectName) {
 		$decorators = $this->decoratorManager->getDecoratorsForClassName($objectName);
@@ -106,9 +109,9 @@ class ObjectManager extends \TYPO3\CMS\Extbase\Object\ObjectManager {
 			foreach ($decorators as $decorator) {
 				if ($instance instanceof \EssentialDots\ExtbaseDomainDecorator\DomainObject\AbstractEntity) {
 					$delimiter = strpos(get_class($instance), '_') !== FALSE ? '_' : '\\';
-					$decoratedRepository = str_replace($delimiter.'Model'.$delimiter, $delimiter.'Repository'.$delimiter, get_class($instance)) . 'Repository';
+					$decoratedRepository = str_replace($delimiter . 'Model' . $delimiter, $delimiter . 'Repository' . $delimiter, get_class($instance)) . 'Repository';
 					$delimiter = strpos($decorator, '_') !== FALSE ? '_' : '\\';
-					$decoraterRepository = str_replace($delimiter.'Model'.$delimiter, $delimiter.'Repository'.$delimiter, $decorator) . 'Repository';
+					$decoraterRepository = str_replace($delimiter . 'Model' . $delimiter, $delimiter . 'Repository' . $delimiter, $decorator) . 'Repository';
 
 					if (class_exists($decoratedRepository) && !class_exists($decoraterRepository)) {
 						class_alias($decoratedRepository, $decoraterRepository);
@@ -120,7 +123,9 @@ class ObjectManager extends \TYPO3\CMS\Extbase\Object\ObjectManager {
 					/* @var $instance \EssentialDots\ExtbaseDomainDecorator\Persistence\AbstractRepository */
 					$instance->setDecoratedObject($newInstance);
 				} else {
-					throw new Exception("Decorator $decorator defined on a class $objectName which is not a subclass of EssentialDots\\ExtbaseDomainDecorator\\DomainObject\\AbstractEntity nor EssentialDots\\ExtbaseDomainDecorator\\Persistence\\AbstractRepository.");
+					throw new \Exception(
+						'Decorator ' . $decorator . ' defined on a class ' . $objectName .
+						' which is not a subclass of EssentialDots\\ExtbaseDomainDecorator\\DomainObject\\AbstractEntity nor EssentialDots\\ExtbaseDomainDecorator\\Persistence\\AbstractRepository.');
 				}
 			}
 		}

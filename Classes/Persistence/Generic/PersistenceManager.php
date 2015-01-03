@@ -5,19 +5,17 @@ namespace EssentialDots\ExtbaseDomainDecorator\Persistence\Generic;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2013 Nikola Stojiljkovic, Essential Dots d.o.o. Belgrade
+ *  (c) 2014 Essential Dots d.o.o. Belgrade
  *  All rights reserved
  *
- *  This script is part of the Typo3 project. The Typo3 project is
+ *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
+ *  the Free Software Foundation; either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  The GNU General Public License can be found at
  *  http://www.gnu.org/copyleft/gpl.html.
- *  A copy is found in the textfile GPL.txt and important notices to the license
- *  from the author is found in LICENSE.txt distributed with these scripts.
  *
  *  This script is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,6 +25,11 @@ namespace EssentialDots\ExtbaseDomainDecorator\Persistence\Generic;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+/**
+ * Class PersistenceManager
+ *
+ * @package EssentialDots\ExtbaseDomainDecorator\Persistence\Generic
+ */
 class PersistenceManager extends \TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager {
 
 	/**
@@ -134,9 +137,9 @@ class PersistenceManager extends \TYPO3\CMS\Extbase\Persistence\Generic\Persiste
 		}
 		if ($this->persistenceSession->hasIdentifier($identifier, $objectType)) {
 			return $this->persistenceSession->getObjectByIdentifier($identifier, $objectType);
-		} else {
-			return $this->backendFactory->getBackendForObjectType($objectType)->getObjectByIdentifier($identifier, $objectType);
 		}
+
+		return $this->backendFactory->getBackendForObjectType($objectType)->getObjectByIdentifier($identifier, $objectType);
 	}
 
 	/**
@@ -151,7 +154,8 @@ class PersistenceManager extends \TYPO3\CMS\Extbase\Persistence\Generic\Persiste
 		// the underlying storage layer
 		// reconstituted entities must be fetched from the session and checked
 		// for changes by the underlying backend as well!
-		foreach ($this->backendBuckets as $backendBucket) { /* @var $backendBucket \EssentialDots\ExtbaseDomainDecorator\Persistence\Generic\BackendBucket */
+		foreach ($this->backendBuckets as $backendBucket) {
+			/* @var $backendBucket \EssentialDots\ExtbaseDomainDecorator\Persistence\Generic\BackendBucket */
 			$backendBucket->persistAll();
 		}
 
@@ -177,7 +181,8 @@ class PersistenceManager extends \TYPO3\CMS\Extbase\Persistence\Generic\Persiste
 	 * @return void
 	 */
 	public function tearDown() {
-		foreach ($this->backendFactory->getInitializedBackendObjects() as $backend) {  /* @var $backend \TYPO3\CMS\Extbase\Persistence\Generic\BackendInterface */
+		foreach ($this->backendFactory->getInitializedBackendObjects() as $backend) {
+			/* @var $backend \TYPO3\CMS\Extbase\Persistence\Generic\BackendInterface */
 			if (method_exists($backend, 'tearDown')) {
 				$backend->tearDown();
 			}
@@ -246,7 +251,6 @@ class PersistenceManager extends \TYPO3\CMS\Extbase\Persistence\Generic\Persiste
 		$backend = $this->backendFactory->getBackendForObjectType($objectType);
 		$backendBucket = $this->getBackendBucket($backend);
 
-
 		if ($this->isNewObject($lastDecorator)) {
 			throw new \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException('The object of type "' . get_class($object) . '" given to update must be persisted already, but is new.', 1249479819);
 		}
@@ -298,7 +302,8 @@ class PersistenceManager extends \TYPO3\CMS\Extbase\Persistence\Generic\Persiste
 	 * @return void
 	 */
 	public function clearState() {
-		foreach ($this->backendBuckets as $backendBucket) { /* @var $backendBucket \EssentialDots\ExtbaseDomainDecorator\Persistence\Generic\BackendBucket */
+		foreach ($this->backendBuckets as $backendBucket) {
+			/* @var $backendBucket \EssentialDots\ExtbaseDomainDecorator\Persistence\Generic\BackendBucket */
 			$backendBucket->setNewObjects(array());
 			$backendBucket->setAddedObjects(new \TYPO3\CMS\Extbase\Persistence\ObjectStorage());
 			$backendBucket->setRemovedObjects(new \TYPO3\CMS\Extbase\Persistence\ObjectStorage());
@@ -308,4 +313,3 @@ class PersistenceManager extends \TYPO3\CMS\Extbase\Persistence\Generic\Persiste
 		$this->persistenceSession->destroy();
 	}
 }
-?>

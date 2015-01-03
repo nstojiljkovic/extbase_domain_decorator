@@ -5,8 +5,7 @@ namespace EssentialDots\ExtbaseDomainDecorator\Domain\Repository;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2013 Nikola Stojiljkovic, Essential Dots d.o.o. Belgrade
- *
+ *  (c) 2014 Essential Dots d.o.o. Belgrade
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -26,12 +25,19 @@ namespace EssentialDots\ExtbaseDomainDecorator\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+/**
+ * Class FrontendUserRepository
+ *
+ * @package EssentialDots\ExtbaseDomainDecorator\Domain\Repository
+ */
 class FrontendUserRepository extends \EssentialDots\ExtbaseDomainDecorator\Persistence\AbstractRepository {
 
 	/**
 	 * @var \EssentialDots\ExtbaseDomainDecorator\Domain\Model\AbstractFrontendUser
 	 */
+	// @codingStandardsIgnoreStart
 	protected $_currentFrontendUser;
+	// @codingStandardsIgnoreEnd
 
 	/**
 	 * Injects query settings object.
@@ -46,14 +52,14 @@ class FrontendUserRepository extends \EssentialDots\ExtbaseDomainDecorator\Persi
 
 	/**
 	 * @param bool $useCache
-	 * @return null|\EssentialDots\ExtbaseDomainDecorator\Domain\Model\AbstractFrontendUser|\EssentialDots\ExtbaseDomainDecorator\Domain\Model\FrontendUser|\EssentialDots\EdTravel\Domain\Model\FrontendUserWithPermissionSets
+	 * @return NULL|\EssentialDots\ExtbaseDomainDecorator\Domain\Model\AbstractFrontendUser|\EssentialDots\ExtbaseDomainDecorator\Domain\Model\FrontendUser
 	 */
-	public function getCurrentFrontendUser($useCache = true) {
+	public function getCurrentFrontendUser($useCache = TRUE) {
 		if (!$this->_currentFrontendUser || !$useCache) {
 			if ($GLOBALS['TSFE']->fe_user->user['uid']) {
 				$this->_currentFrontendUser = $this->findByUid($GLOBALS['TSFE']->fe_user->user['uid']);
 			} else {
-				$this->_currentFrontendUser = null;
+				$this->_currentFrontendUser = NULL;
 			}
 		}
 

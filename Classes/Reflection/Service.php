@@ -5,19 +5,17 @@ namespace EssentialDots\ExtbaseDomainDecorator\Reflection;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2013 Nikola Stojiljkovic, Essential Dots d.o.o. Belgrade
+ *  (c) 2014 Essential Dots d.o.o. Belgrade
  *  All rights reserved
  *
- *  This script is part of the Typo3 project. The Typo3 project is
+ *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
+ *  the Free Software Foundation; either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  The GNU General Public License can be found at
  *  http://www.gnu.org/copyleft/gpl.html.
- *  A copy is found in the textfile GPL.txt and important notices to the license
- *  from the author is found in LICENSE.txt distributed with these scripts.
  *
  *  This script is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,6 +25,11 @@ namespace EssentialDots\ExtbaseDomainDecorator\Reflection;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+/**
+ * Class Service
+ *
+ * @package EssentialDots\ExtbaseDomainDecorator\Reflection
+ */
 class Service extends \TYPO3\CMS\Extbase\Reflection\ReflectionService {
 
 	/**
@@ -75,7 +78,12 @@ class Service extends \TYPO3\CMS\Extbase\Reflection\ReflectionService {
 					if (!$classSchema->hasProperty($propertyName)) {
 						if (!$this->isPropertyTaggedWith($decoratorClassName, $propertyName, 'transient') && $this->isPropertyTaggedWith($decoratorClassName, $propertyName, 'var')) {
 							$cascadeTagValues = $this->getPropertyTagValues($decoratorClassName, $propertyName, 'cascade');
-							$classSchema->addProperty($propertyName, implode(' ', $this->getPropertyTagValues($decoratorClassName, $propertyName, 'var')), $this->isPropertyTaggedWith($decoratorClassName, $propertyName, 'lazy'), $cascadeTagValues[0]);
+							$classSchema->addProperty(
+								$propertyName,
+								implode(' ', $this->getPropertyTagValues($decoratorClassName, $propertyName, 'var')),
+								$this->isPropertyTaggedWith($decoratorClassName, $propertyName, 'lazy'),
+								$cascadeTagValues[0]
+							);
 						}
 						if ($this->isPropertyTaggedWith($decoratorClassName, $propertyName, 'uuid')) {
 							$classSchema->setUuidPropertyName($propertyName);
@@ -106,7 +114,8 @@ class Service extends \TYPO3\CMS\Extbase\Reflection\ReflectionService {
 	 */
 	protected function getDecoratorManager() {
 		if (!$this->decoratorManager) {
-			$this->decoratorManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager')->get('EssentialDots\\ExtbaseDomainDecorator\\Decorator\\DecoratorManager');
+			$this->decoratorManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager')
+				->get('EssentialDots\\ExtbaseDomainDecorator\\Decorator\\DecoratorManager');
 		}
 
 		return $this->decoratorManager;

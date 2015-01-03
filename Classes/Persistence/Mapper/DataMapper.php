@@ -6,19 +6,17 @@ use EssentialDots\ExtbaseDomainDecorator\Persistence\Mapper\Exception;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2013 Nikola Stojiljkovic, Essential Dots d.o.o. Belgrade
+ *  (c) 2014 Essential Dots d.o.o. Belgrade
  *  All rights reserved
  *
- *  This script is part of the Typo3 project. The Typo3 project is
+ *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
+ *  the Free Software Foundation; either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  The GNU General Public License can be found at
  *  http://www.gnu.org/copyleft/gpl.html.
- *  A copy is found in the textfile GPL.txt and important notices to the license
- *  from the author is found in LICENSE.txt distributed with these scripts.
  *
  *  This script is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -28,6 +26,11 @@ use EssentialDots\ExtbaseDomainDecorator\Persistence\Mapper\Exception;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+/**
+ * Class DataMapper
+ *
+ * @package EssentialDots\ExtbaseDomainDecorator\Persistence\Mapper
+ */
 class DataMapper extends \TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMapper {
 
 	/**
@@ -69,14 +72,23 @@ class DataMapper extends \TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMappe
 
 	/**
 	 * @param $object
+	 */
+	// @codingStandardsIgnoreStart
+	public function reloadObjectFromDB($object) {
+		$this->reloadObjectFromDataBase($object);
+	}
+	// @codingStandardsIgnoreEnd
+
+	/**
+	 * @param $object
 	 * @throws Exception\ObjectNotFoundInDBException
 	 */
-	public function reloadObjectFromDB($object) {
+	public function reloadObjectFromDataBase($object) {
 		$tableName = $this->getDataMap(get_class($object))->getTableName();
 		$enableFields = $this->getEnableFields($tableName);
 		$uid = $this->getDatabase()->fullQuoteStr($object->getUid(), $tableName);
-		$res = $this->getDatabase()->sql_query("SELECT * FROM $tableName WHERE uid = $uid $enableFields");
-		if ($res && $row = $this->getDatabase()->sql_fetch_assoc($res)) {
+		$res = $this->getDatabase()->sql_query('SELECT * FROM ' . $tableName . ' WHERE uid = ' . $uid . $enableFields);
+		if ($res && ($row = $this->getDatabase()->sql_fetch_assoc($res))) {
 			$this->thawProperties($object, $row);
 			$object->_memorizeCleanState();
 		} else {
@@ -105,7 +117,12 @@ class DataMapper extends \TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMappe
 	 * @param array $relationTableMatchFields
 	 * @return \TYPO3\CMS\Extbase\Persistence\Generic\Qom\ConstraintInterface $constraint
 	 */
-	protected function getConstraint(\TYPO3\CMS\Extbase\Persistence\QueryInterface $query, \TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface $parentObject, $propertyName, $fieldValue = '', $relationTableMatchFields = array()) {
+	protected function getConstraint(
+			\TYPO3\CMS\Extbase\Persistence\QueryInterface $query,
+			\TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface $parentObject,
+			$propertyName,
+			$fieldValue = '',
+			$relationTableMatchFields = array()) {
 		$columnMap = $this->getDataMap(get_class($parentObject))->getColumnMap($propertyName);
 		if ($columnMap->getParentKeyFieldName() !== NULL) {
 			$constraint = $query->equals($columnMap->getParentKeyFieldName(), $parentObject);
@@ -141,10 +158,10 @@ class DataMapper extends \TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMappe
 		if (trim($enableFields) == 'AND') {
 			$enableFields = '';
 		}
-		$enableFields .= \TYPO3\CMS\Backend\Utility\BackendUtility::deleteClause( $table );
+		$enableFields .= \TYPO3\CMS\Backend\Utility\BackendUtility::deleteClause($table);
 
 		if ($alias) {
-			$enableFields = str_replace($table.'.', $alias.'.', $enableFields);
+			$enableFields = str_replace($table . '.', $alias . '.', $enableFields);
 		}
 
 		return $enableFields;
@@ -177,7 +194,8 @@ class DataMapper extends \TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMappe
 	 */
 	protected function getDecoratorManager() {
 		if (!$this->decoratorManager) {
-			$this->decoratorManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager')->get('EssentialDots\\ExtbaseDomainDecorator\\Decorator\\DecoratorManager');
+			$this->decoratorManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager')
+				->get('EssentialDots\\ExtbaseDomainDecorator\\Decorator\\DecoratorManager');
 		}
 
 		return $this->decoratorManager;

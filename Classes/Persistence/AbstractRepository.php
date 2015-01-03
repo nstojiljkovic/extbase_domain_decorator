@@ -5,19 +5,17 @@ namespace EssentialDots\ExtbaseDomainDecorator\Persistence;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2013 Nikola Stojiljkovic, Essential Dots d.o.o. Belgrade
+ *  (c) 2014 Essential Dots d.o.o. Belgrade
  *  All rights reserved
  *
- *  This script is part of the Typo3 project. The Typo3 project is
+ *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
+ *  the Free Software Foundation; either version 3 of the License, or
  *  (at your option) any later version.
  *
  *  The GNU General Public License can be found at
  *  http://www.gnu.org/copyleft/gpl.html.
- *  A copy is found in the textfile GPL.txt and important notices to the license
- *  from the author is found in LICENSE.txt distributed with these scripts.
  *
  *  This script is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,12 +25,19 @@ namespace EssentialDots\ExtbaseDomainDecorator\Persistence;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+/**
+ * Class AbstractRepository
+ *
+ * @package EssentialDots\ExtbaseDomainDecorator\Persistence
+ */
 abstract class AbstractRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
 
 	/**
 	 * @var \EssentialDots\ExtbaseDomainDecorator\Persistence\AbstractRepository
 	 */
+	// @codingStandardsIgnoreStart
 	private $_decoratedObject;
+	// @codingStandardsIgnoreEnd
 
 	/**
 	 * @var \EssentialDots\ExtbaseDomainDecorator\Decorator\DecoratorManager
@@ -141,7 +146,7 @@ abstract class AbstractRepository extends \TYPO3\CMS\Extbase\Persistence\Reposit
 	 * @api
 	 */
 	public function add($object) {
-		if ($object === null) {
+		if ($object === NULL) {
 			throw new \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException('The object given to add() was not of the type (' . $this->objectType . ') this repository manages.', 1248363335);
 		}
 
@@ -163,7 +168,7 @@ abstract class AbstractRepository extends \TYPO3\CMS\Extbase\Persistence\Reposit
 	 * @api
 	 */
 	public function remove($object) {
-		if ($object === null) {
+		if ($object === NULL) {
 			throw new \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException('The object given to remove() was not of the type (' . $this->objectType . ') this repository manages.', 1248363335);
 		}
 
@@ -183,14 +188,18 @@ abstract class AbstractRepository extends \TYPO3\CMS\Extbase\Persistence\Reposit
 	 * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
 	 */
 	public function update($modifiedObject) {
-		if ($modifiedObject === null) {
-			throw new \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException('The modified object given to update() was not of the type (' . $this->objectType . ') this repository manages.', 1249479625);
+		if ($modifiedObject === NULL) {
+			throw new \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException(
+				'The modified object given to update() was not of the type (' . $this->objectType . ') this repository manages.',
+				1249479625);
 		}
 
 		$decoratedClass = $this->decoratorManager->getDecoratedClass(get_class($modifiedObject));
 
 		if (!is_subclass_of($decoratedClass, $this->objectType) && !is_subclass_of($this->objectType, $decoratedClass) && $decoratedClass != ltrim($this->objectType, '\\')) {
-			throw new \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException('The modified object given to update() was not of the type (' . $this->objectType . ') this repository manages.', 1249479625);
+			throw new \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException(
+				'The modified object given to update() was not of the type (' . $this->objectType . ') this repository manages.',
+				1249479625);
 		}
 
 		$this->persistenceManager->update($modifiedObject);

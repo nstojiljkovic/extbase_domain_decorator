@@ -5,8 +5,7 @@ namespace EssentialDots\ExtbaseDomainDecorator\Domain\Model;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2013 Nikola Stojiljkovic, Essential Dots d.o.o. Belgrade
- *  
+ *  (c) 2014 Essential Dots d.o.o. Belgrade
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -26,6 +25,11 @@ namespace EssentialDots\ExtbaseDomainDecorator\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+/**
+ * Class AbstractFrontendUser
+ *
+ * @package EssentialDots\ExtbaseDomainDecorator\Domain\Model
+ */
 class AbstractFrontendUser extends \EssentialDots\ExtbaseDomainDecorator\DomainObject\AbstractEntity {
 
 }

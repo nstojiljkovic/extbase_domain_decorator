@@ -5,8 +5,7 @@ namespace EssentialDots\ExtbaseDomainDecorator\Domain\Repository;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2013 Nikola Stojiljkovic, Essential Dots d.o.o. Belgrade
- *  
+ *  (c) 2014 Essential Dots d.o.o. Belgrade
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -26,12 +25,19 @@ namespace EssentialDots\ExtbaseDomainDecorator\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+/**
+ * Class FrontendGroupRepository
+ *
+ * @package EssentialDots\ExtbaseDomainDecorator\Domain\Repository
+ */
 class FrontendGroupRepository extends \EssentialDots\ExtbaseDomainDecorator\Persistence\AbstractRepository {
 
 	/**
 	 * @var array<\EssentialDots\ExtbaseDomainDecorator\Domain\Model\AbstractFrontendGroup>
 	 */
+	// @codingStandardsIgnoreStart
 	protected $_currentFrontendGroups = array();
+	// @codingStandardsIgnoreEnd
 
 	/**
 	 * Injects query settings object.
@@ -48,10 +54,10 @@ class FrontendGroupRepository extends \EssentialDots\ExtbaseDomainDecorator\Pers
 	 * @param bool $useCache
 	 * @return array<\EssentialDots\ExtbaseDomainDecorator\Domain\Model\AbstractFrontendGroup>
 	 */
-	public function getCurrentFrontendGroups($useCache = true) {
+	public function getCurrentFrontendGroups($useCache = TRUE) {
 		if (!$this->_currentFrontendGroups || !$useCache) {
 			if ($GLOBALS['TSFE']->fe_user->groupData && $GLOBALS['TSFE']->fe_user->groupData['uid']) {
-				foreach($GLOBALS['TSFE']->fe_user->groupData['uid'] as $uid) {
+				foreach ($GLOBALS['TSFE']->fe_user->groupData['uid'] as $uid) {
 					$userGroup = $this->findByUid($uid);
 					if ($userGroup) {
 						$this->_currentFrontendGroups[] = $userGroup;
