@@ -87,7 +87,10 @@ class DataMapper extends \TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMappe
 		$tableName = $this->getDataMap(get_class($object))->getTableName();
 		$enableFields = $this->getEnableFields($tableName);
 		$uid = $this->getDatabase()->fullQuoteStr($object->getUid(), $tableName);
-		$res = $this->getDatabase()->sql_query('SELECT * FROM ' . $tableName . ' WHERE uid = ' . $uid . $enableFields);
+		$res = $this->getDatabase()->sql_query('
+			# @tables_used = ' . $tableName . ';
+
+			SELECT * FROM ' . $tableName . ' WHERE uid = ' . $uid . $enableFields);
 		if ($res && ($row = $this->getDatabase()->sql_fetch_assoc($res))) {
 			$this->thawProperties($object, $row);
 			$object->_memorizeCleanState();
