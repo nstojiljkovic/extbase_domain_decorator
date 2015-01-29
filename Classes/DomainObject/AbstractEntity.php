@@ -67,7 +67,7 @@ abstract class AbstractEntity extends \TYPO3\CMS\Extbase\DomainObject\AbstractEn
 	 * @return void
 	 */
 	public function setPid($pid) {
-		if ($this->_decoratedObject) {
+		if ($this->_decoratedObject && method_exists($this->_decoratedObject, 'setPid')) {
 			$this->_decoratedObject->setPid($pid);
 		} else {
 			parent::setPid($pid);
@@ -80,7 +80,7 @@ abstract class AbstractEntity extends \TYPO3\CMS\Extbase\DomainObject\AbstractEn
 	 * @return int The pid or NULL if none set yet.
 	 */
 	public function getPid() {
-		if ($this->_decoratedObject) {
+		if ($this->_decoratedObject && method_exists($this->_decoratedObject, 'getPid')) {
 			return $this->_decoratedObject->getPid();
 		}
 
@@ -93,7 +93,7 @@ abstract class AbstractEntity extends \TYPO3\CMS\Extbase\DomainObject\AbstractEn
 	 * @return mixed|NULL
 	 */
 	public function __call($name, $arguments) {
-		if ($this->_decoratedObject) {
+		if ($this->_decoratedObject && is_callable(array($this->_decoratedObject, $name))) {
 			return call_user_func_array(array($this->_decoratedObject, $name), $arguments);
 		}
 
@@ -142,7 +142,7 @@ abstract class AbstractEntity extends \TYPO3\CMS\Extbase\DomainObject\AbstractEn
 	 * @return void
 	 */
 	public function __wakeup() {
-		if ($this->_decoratedObject) {
+		if ($this->_decoratedObject && method_exists($this->_decoratedObject, 'initializeObject')) {
 			$this->_decoratedObject->initializeObject();
 		}
 		$this->initializeObject();
@@ -165,7 +165,7 @@ abstract class AbstractEntity extends \TYPO3\CMS\Extbase\DomainObject\AbstractEn
 	public function _setProperty($propertyName, $propertyValue) {
 		if ($propertyName == 'uid' || $propertyName == 'pid') {
 			$this->$propertyName = $propertyValue;
-			if ($this->_decoratedObject) {
+			if ($this->_decoratedObject && method_exists($this->_decoratedObject, '_setProperty')) {
 				$this->_decoratedObject->_setProperty($propertyName, $propertyValue);
 			}
 			return TRUE;
@@ -208,7 +208,7 @@ abstract class AbstractEntity extends \TYPO3\CMS\Extbase\DomainObject\AbstractEn
 			}
 		}
 
-		if ($this->_decoratedObject) {
+		if ($this->_decoratedObject && method_exists($this->_decoratedObject, '_getProperties')) {
 			foreach ($this->_decoratedObject->_getProperties() as $propertyName => $propertyValue) {
 				if (!$properties[$propertyName]) {
 					$properties[$propertyName] = $propertyValue;
@@ -243,12 +243,12 @@ abstract class AbstractEntity extends \TYPO3\CMS\Extbase\DomainObject\AbstractEn
 		if ($propertyName !== NULL) {
 			if (property_exists($this, $propertyName)) {
 				$this->_memorizePropertyCleanState($propertyName);
-			} elseif ($this->_decoratedObject) {
+			} elseif ($this->_decoratedObject && method_exists($this->_decoratedObject, '_memorizePropertyCleanState')) {
 				$this->_decoratedObject->_memorizePropertyCleanState($propertyName);
 			}
 		} else {
 			parent::_memorizeCleanState();
-			if ($this->_decoratedObject) {
+			if ($this->_decoratedObject && method_exists($this->_decoratedObject, '_memorizeCleanState')) {
 				$this->_decoratedObject->_memorizeCleanState();
 			}
 		}
@@ -285,7 +285,7 @@ abstract class AbstractEntity extends \TYPO3\CMS\Extbase\DomainObject\AbstractEn
 			} else {
 				$this->_cleanProperties[$propertyName] = $propertyValue;
 			}
-		} elseif ($this->_decoratedObject) {
+		} elseif ($this->_decoratedObject && method_exists($this->_decoratedObject, '_memorizePropertyCleanState')) {
 			$this->_decoratedObject->_memorizePropertyCleanState($propertyName);
 		}
 	}
@@ -298,7 +298,7 @@ abstract class AbstractEntity extends \TYPO3\CMS\Extbase\DomainObject\AbstractEn
 	 */
 	// @codingStandardsIgnoreStart
 	public function _getCleanProperties() {
-		if ($this->_decoratedObject) {
+		if ($this->_decoratedObject && method_exists($this->_decoratedObject, '_getCleanProperties')) {
 			if (is_array($this->_cleanProperties)) {
 				$decoratedCleanProperties = $this->_decoratedObject->_getCleanProperties();
 				if (is_array($decoratedCleanProperties)) {
