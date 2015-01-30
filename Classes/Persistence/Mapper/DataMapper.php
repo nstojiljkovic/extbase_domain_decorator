@@ -71,19 +71,19 @@ class DataMapper extends \TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMappe
 	}
 
 	/**
-	 * @param $object
+	 * @param \TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface $object
 	 */
 	// @codingStandardsIgnoreStart
-	public function reloadObjectFromDB($object) {
+	public function reloadObjectFromDB(\TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface $object) {
 		$this->reloadObjectFromDataBase($object);
 	}
 	// @codingStandardsIgnoreEnd
 
 	/**
-	 * @param $object
+	 * @param \TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface $object
 	 * @throws Exception\ObjectNotFoundInDBException
 	 */
-	public function reloadObjectFromDataBase($object) {
+	public function reloadObjectFromDataBase(\TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface $object) {
 		$tableName = $this->getDataMap(get_class($object))->getTableName();
 		$enableFields = $this->getEnableFields($tableName);
 		$uid = $this->getDatabase()->fullQuoteStr($object->getUid(), $tableName);
@@ -92,6 +92,15 @@ class DataMapper extends \TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMappe
 
 			SELECT * FROM ' . $tableName . ' WHERE uid = ' . $uid . $enableFields);
 		if ($res && ($row = $this->getDatabase()->sql_fetch_assoc($res))) {
+			$className = get_class($object);
+			$dataMap = $this->getDataMap($className);
+			$properties = $object->_getProperties();
+			foreach ($properties as $propertyName => $_) {
+				if (!$dataMap->isPersistableProperty($propertyName)) {
+					continue;
+				}
+				$object->_setProperty($propertyName, NULL);
+			}
 			$this->thawProperties($object, $row);
 			$object->_memorizeCleanState();
 		} else {
