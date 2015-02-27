@@ -41,18 +41,10 @@ abstract class AbstractRepository extends \TYPO3\CMS\Extbase\Persistence\Reposit
 
 	/**
 	 * @var \EssentialDots\ExtbaseDomainDecorator\Decorator\DecoratorManager
+	 * @inject
 	 */
 	protected $decoratorManager;
 
-	/**
-	 * Injects the decorator manager
-	 *
-	 * @param \EssentialDots\ExtbaseDomainDecorator\Decorator\DecoratorManager $decoratorManager
-	 * @return void
-	 */
-	public function injectDecoratorManager(\EssentialDots\ExtbaseDomainDecorator\Decorator\DecoratorManager $decoratorManager) {
-		$this->decoratorManager = $decoratorManager;
-	}
 	/**
 	 * Constructs a new Repository
 	 *
