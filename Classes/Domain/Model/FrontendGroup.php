@@ -48,7 +48,7 @@ class FrontendGroup extends AbstractFrontendGroup {
 	protected $description = '';
 
 	/**
-	 * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\EssentialDots\ExtbaseDomainDecorator\Domain\Model\FrontendGroup>
+	 * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\EssentialDots\ExtbaseDomainDecorator\Domain\Model\AbstractFrontendGroup>
 	 */
 	protected $subgroup;
 
@@ -138,22 +138,22 @@ class FrontendGroup extends AbstractFrontendGroup {
 	/**
 	 * Adds a subgroup to the frontend user
 	 *
-	 * @param \EssentialDots\ExtbaseDomainDecorator\Domain\Model\FrontendGroup $subgroup
+	 * @param \EssentialDots\ExtbaseDomainDecorator\Domain\Model\AbstractFrontendGroup $subgroup
 	 * @return void
 	 * @api
 	 */
-	public function addSubgroup(\EssentialDots\ExtbaseDomainDecorator\Domain\Model\FrontendGroup $subgroup) {
+	public function addSubgroup(\EssentialDots\ExtbaseDomainDecorator\Domain\Model\AbstractFrontendGroup $subgroup) {
 		$this->subgroup->attach($subgroup);
 	}
 
 	/**
 	 * Removes a subgroup from the frontend user group
 	 *
-	 * @param \EssentialDots\ExtbaseDomainDecorator\Domain\Model\FrontendGroup $subgroup
+	 * @param \EssentialDots\ExtbaseDomainDecorator\Domain\Model\AbstractFrontendGroup $subgroup
 	 * @return void
 	 * @api
 	 */
-	public function removeSubgroup(\EssentialDots\ExtbaseDomainDecorator\Domain\Model\FrontendGroup $subgroup) {
+	public function removeSubgroup(\EssentialDots\ExtbaseDomainDecorator\Domain\Model\AbstractFrontendGroup $subgroup) {
 		$this->subgroup->detach($subgroup);
 	}
 

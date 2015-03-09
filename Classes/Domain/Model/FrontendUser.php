@@ -43,7 +43,7 @@ class FrontendUser extends AbstractFrontendUser {
 	protected $password = '';
 
 	/**
-	 * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\EssentialDots\ExtbaseDomainDecorator\Domain\Model\FrontendGroup>
+	 * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\EssentialDots\ExtbaseDomainDecorator\Domain\Model\AbstractFrontendGroup>
 	 */
 	protected $usergroup;
 
@@ -197,22 +197,22 @@ class FrontendUser extends AbstractFrontendUser {
 	/**
 	 * Adds a usergroup to the frontend user
 	 *
-	 * @param \EssentialDots\ExtbaseDomainDecorator\Domain\Model\FrontendGroup $usergroup
+	 * @param \EssentialDots\ExtbaseDomainDecorator\Domain\Model\AbstractFrontendGroup $usergroup
 	 * @return void
 	 * @api
 	 */
-	public function addUsergroup(\EssentialDots\ExtbaseDomainDecorator\Domain\Model\FrontendGroup $usergroup) {
+	public function addUsergroup(\EssentialDots\ExtbaseDomainDecorator\Domain\Model\AbstractFrontendGroup $usergroup) {
 		$this->usergroup->attach($usergroup);
 	}
 
 	/**
 	 * Removes a usergroup from the frontend user
 	 *
-	 * @param \EssentialDots\ExtbaseDomainDecorator\Domain\Model\FrontendGroup $usergroup
+	 * @param \EssentialDots\ExtbaseDomainDecorator\Domain\Model\AbstractFrontendGroup $usergroup
 	 * @return void
 	 * @api
 	 */
-	public function removeUsergroup(\EssentialDots\ExtbaseDomainDecorator\Domain\Model\FrontendGroup $usergroup) {
+	public function removeUsergroup(\EssentialDots\ExtbaseDomainDecorator\Domain\Model\AbstractFrontendGroup $usergroup) {
 		$this->usergroup->detach($usergroup);
 	}
 
