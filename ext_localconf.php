@@ -13,6 +13,7 @@ $extbaseObjectContainer->registerImplementation('TYPO3\\CMS\\Extbase\\Persistenc
 $extbaseObjectContainer->registerImplementation('TYPO3\\CMS\\Extbase\\Persistence\\Generic\\Mapper\\DataMapFactory', 'EssentialDots\\ExtbaseDomainDecorator\\Persistence\\Mapper\\DataMapFactory');
 $extbaseObjectContainer->registerImplementation('TYPO3\\CMS\\Extbase\\Object\\ObjectManager', 'EssentialDots\\ExtbaseDomainDecorator\\Object\\ObjectManager');
 $extbaseObjectContainer->registerImplementation('TYPO3\\CMS\\Extbase\\Object\\ObjectManagerInterface', 'EssentialDots\\ExtbaseDomainDecorator\\Object\\ObjectManager');
+$extbaseObjectContainer->registerImplementation('TYPO3\\CMS\\Extbase\\Persistence\\Generic\\LazyLoadingProxy', 'EssentialDots\\ExtbaseDomainDecorator\\Persistence\\Generic\\LazyLoadingProxy');
 $extbaseObjectContainer->registerImplementation('TYPO3\\CMS\\Extbase\\Persistence\\Generic\\Session', 'EssentialDots\\ExtbaseDomainDecorator\\Persistence\\Generic\\Session');
 $extbaseObjectContainer->registerImplementation('TYPO3\\CMS\\Extbase\\Persistence\\Generic\\PersistenceManager', 'EssentialDots\\ExtbaseDomainDecorator\\Persistence\\Generic\\PersistenceManager');
 $extbaseObjectContainer->registerImplementation('EssentialDots\\ExtbaseDomainDecorator\\Domain\\Model\\AbstractFrontendGroup', 'EssentialDots\\ExtbaseDomainDecorator\\Domain\\Model\\FrontendGroup');
@@ -25,6 +26,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Extbase\\Persistence\
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Extbase\\Persistence\\Generic\\Mapper\\DataMapFactory']['className'] = 'EssentialDots\\ExtbaseDomainDecorator\\Persistence\\Mapper\\DataMapFactory';
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Extbase\\Object\\ObjectManager']['className'] = 'EssentialDots\\ExtbaseDomainDecorator\\Object\\ObjectManager';
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Extbase\\Object\\ObjectManagerInterface']['className'] = 'EssentialDots\\ExtbaseDomainDecorator\\Object\\ObjectManager';
+$GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Extbase\\Persistence\\Generic\\LazyLoadingProxy']['className'] = 'EssentialDots\\ExtbaseDomainDecorator\\Persistence\\Generic\\LazyLoadingProxy';
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Extbase\\Persistence\\Generic\\Session']['className'] = 'EssentialDots\\ExtbaseDomainDecorator\\Persistence\\Generic\\Session';
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects']['TYPO3\\CMS\\Extbase\\Persistence\\Generic\\PersistenceManager']['className'] = 'EssentialDots\\ExtbaseDomainDecorator\\Persistence\\Generic\\PersistenceManager';
 
