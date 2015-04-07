@@ -142,7 +142,7 @@ class ObjectManager extends \TYPO3\CMS\Extbase\Object\ObjectManager {
 	 */
 	protected function registerLastDecorator(\EssentialDots\ExtbaseDomainDecorator\DomainObject\AbstractEntity $instance) {
 		$decoratedObject = $instance->getDecoratedObject();
-		while (!is_null($decoratedObject)) {
+		while (!is_null($decoratedObject) && method_exists($decoratedObject, 'getDecoratedObject')) {
 			$this->lastDecoratorMapping[$decoratedObject] = $instance;
 			$decoratedObject = $decoratedObject->getDecoratedObject();
 		}
