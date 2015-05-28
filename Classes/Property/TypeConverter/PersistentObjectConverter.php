@@ -85,7 +85,7 @@ class PersistentObjectConverter extends \TYPO3\CMS\Extbase\Property\TypeConverte
 	 * @throws \TYPO3\CMS\Extbase\Property\Exception\InvalidSourceException
 	 */
 	protected function fetchObjectFromPersistence($identity, $targetType) {
-		if (is_numeric($identity)) {
+		if ($identity) {
 			$targetType = $this->objectContainer->getImplementationClassName($targetType);
 			$targetRepositoryType = $this->getRepositoryClassName($targetType);
 			/* @var $targetRepository \TYPO3\CMS\Extbase\Persistence\Repository */
