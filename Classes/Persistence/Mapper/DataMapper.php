@@ -2,6 +2,7 @@
 
 namespace EssentialDots\ExtbaseDomainDecorator\Persistence\Mapper;
 use EssentialDots\ExtbaseDomainDecorator\Persistence\Mapper\Exception;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /***************************************************************
  *  Copyright notice
@@ -187,6 +188,12 @@ class DataMapper extends \TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMappe
 	 * @return void
 	 */
 	protected function thawProperties(\TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface $object, array $row) {
+		$params = array(
+			'pObj' => &$this,
+			'object' => &$object,
+			'row' => &$row,
+		);
+		$this->getSignalSlotDispatcher()->dispatch(__CLASS__, 'beforeThawProperties', $params);
 		parent::thawProperties($object, $row);
 		$className = get_class($object);
 		$dataMap = $this->getDataMap($className);
@@ -199,6 +206,7 @@ class DataMapper extends \TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMappe
 				$object->_setProperty('_localizedUid', $row['_LOCALIZED_UID']);
 			}
 		}
+		$this->getSignalSlotDispatcher()->dispatch(__CLASS__, 'afterThawProperties', $params);
 	}
 
 	/**
@@ -211,5 +219,24 @@ class DataMapper extends \TYPO3\CMS\Extbase\Persistence\Generic\Mapper\DataMappe
 		}
 
 		return $this->decoratorManager;
+	}
+
+	/**
+	 * @var \TYPO3\CMS\Extbase\SignalSlot\Dispatcher
+	 */
+	// @codingStandardsIgnoreStart
+	protected $_signalSlotDispatcher = NULL;
+	// @codingStandardsIgnoreEnd
+
+	/**
+	 * Get the SignalSlot dispatcher
+	 *
+	 * @return \TYPO3\CMS\Extbase\SignalSlot\Dispatcher
+	 */
+	protected function getSignalSlotDispatcher() {
+		if (!isset($this->_signalSlotDispatcher)) {
+			$this->_signalSlotDispatcher = GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\SignalSlot\\Dispatcher');
+		}
+		return $this->_signalSlotDispatcher;
 	}
 }
