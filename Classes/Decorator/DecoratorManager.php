@@ -63,13 +63,6 @@ class DecoratorManager implements \TYPO3\CMS\Core\SingletonInterface {
 	protected $objectContainer;
 
 	/**
-	 * Constructor
-	 */
-	public function __construct() {
-		$this->objectContainer = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('EssentialDots\\ExtbaseDomainDecorator\\Object\\Container\\Container');
-	}
-
-	/**
 	 * @param $className
 	 * @param string $backendClassName
 	 * @param string $dataMapFactoryClassName
@@ -154,7 +147,7 @@ class DecoratorManager implements \TYPO3\CMS\Core\SingletonInterface {
 	public function getDecoratorsForClassName($className) {
 		$className = ltrim($className, '\\');
 
-		$baseClassName = $this->objectContainer->getBaseClassName($className);
+		$baseClassName = $this->getObjectContainer()->getBaseClassName($className);
 		return $this->decorators[$baseClassName] ? $this->decorators[$baseClassName] : array();
 	}
 
@@ -165,6 +158,29 @@ class DecoratorManager implements \TYPO3\CMS\Core\SingletonInterface {
 	public function getBaseClassName($className) {
 		$className = ltrim($className, '\\');
 
-		return $this->objectContainer->getBaseClassName($className);
+		return $this->getObjectContainer()->getBaseClassName($className);
+	}
+
+	/**
+	 * @return \EssentialDots\ExtbaseDomainDecorator\Object\Container\Container
+	 */
+	protected function getObjectContainer() {
+		if ($this->objectContainer === NULL) {
+			$this->objectContainer = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('EssentialDots\\ExtbaseDomainDecorator\\Object\\Container\\Container');
+		}
+
+		return $this->objectContainer;
+	}
+
+	/**
+	 * @return void
+	 */
+	public function destroy() {
+		$this->decorators = array();
+		$this->registeredDecoratorClasses = array();
+		$this->registeredBackendClasses = array();
+		$this->registeredDataMapFactoryClasses = array();
+		$this->registrations = array();
+		$this->objectContainer = NULL;
 	}
 }
