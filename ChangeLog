@@ -1,0 +1,6 @@
+Version: 0.9.0
+Subject: [TASK] Update TYPO3 core dependency
+Date:    2016-08-29 11:05:05 +0200
+Gitweb:  https://gerrit.essentialdots.com/gitweb?p=TYPO3CMS/Extensions/extbase_domain_decorator.git;a=commit;h=1c8f48f6781595e4b8eb0fdc1c8ecfa4fbf2e76c
+
+Change-Id: Ibcfe9cc4c8c261ea37821a830c32e761d659dcd1

@@ -1,6 +1,7 @@
 <?php
 
-$EM_CONF[$_EXTKEY] = array(
+
+$EM_CONF[$_EXTKEY] = array (
 	'title' => 'Extbase domain decorator',
 	'description' => '',
 	'category' => 'plugin',
@@ -18,19 +19,25 @@ $EM_CONF[$_EXTKEY] = array(
 	'modify_tables' => '',
 	'clearCacheOnLoad' => 1,
 	'lockType' => '',
-	'version' => '0.9.0-dev',
-	'constraints' => array(
-		'depends' => array(
-			'cms' => '6.2.0-7.7.0',
-			'extbase' => ''
-		),
-		'conflicts' => array(
-		),
-		'suggests' => array(
-		),
+	'version' => '0.9.0',
+	'constraints' => 
+	array (
+	  'depends' => 
+	  array (
+	    'cms' => '6.2.0-7.7.0',
+	    'extbase' => '',
+	  ),
+	  'conflicts' => 
+	  array (
+	  ),
+	  'suggests' => 
+	  array (
+	  ),
 	),
-	'suggests' => array(
+	'suggests' => 
+	array (
 	),
 	'conflicts' => '',
 );
 
+?>
