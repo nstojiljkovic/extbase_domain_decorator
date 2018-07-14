@@ -45,7 +45,7 @@ class PersistentObjectConverter extends \TYPO3\CMS\Extbase\Property\TypeConverte
 	/**
 	 * @var integer
 	 */
-	protected $priority = 10;
+	protected $priority = 25;
 
 	/**
 	 * @var \EssentialDots\ExtbaseDomainDecorator\Object\Container\Container
