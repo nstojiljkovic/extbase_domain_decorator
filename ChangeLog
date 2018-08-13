@@ -1,3 +1,11 @@
+Version: 0.9.2
+Subject: [BUGFIX] Fix PHP warnings related to declarations
+Date:    2018-08-13 10:03:37 +0200
+Gitweb:  https://gerrit.essentialdots.com/gitweb?p=TYPO3CMS/Extensions/extbase_domain_decorator.git;a=commit;h=96bce46e2370400cc07ed31bc86a5848a6792d45
+
+Change-Id: Iffe33a331f3ffb836b992fb16639f3afd5610ea2
+Related: #TP-4787
+
 Version: 0.9.1
 Subject: [TASK] TYPO3 8.7 compatibility update
 Date:    2018-07-24 12:58:11 +0200
