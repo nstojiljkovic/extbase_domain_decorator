@@ -53,11 +53,11 @@ class PersistentObjectConverter extends \TYPO3\CMS\Extbase\Property\TypeConverte
 	protected $objectContainer;
 
 	/**
-	 * @param \EssentialDots\ExtbaseDomainDecorator\Object\Container\Container $objectContainer
+	 * @param \TYPO3\CMS\Extbase\Object\Container\Container $objectContainer
 	 * @return void
 	 */
-	public function injectObjectContainer(\EssentialDots\ExtbaseDomainDecorator\Object\Container\Container $objectContainer) {
-		$this->objectContainer = $objectContainer;
+	public function injectObjectContainer(\TYPO3\CMS\Extbase\Object\Container\Container $objectContainer) {
+		$this->objectContainer = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('EssentialDots\\ExtbaseDomainDecorator\\Object\\Container\\Container');
 	}
 
 	/**
