@@ -30,7 +30,7 @@ namespace EssentialDots\ExtbaseDomainDecorator\Object\Container;
  *
  * @package EssentialDots\ExtbaseDomainDecorator\Object\Container
  */
-class Container implements \TYPO3\CMS\Core\SingletonInterface {
+class Container extends \TYPO3\CMS\Extbase\Object\Container\Container implements \TYPO3\CMS\Core\SingletonInterface {
 	/**
 	 * registered alternative implementations of a class
 	 * e.g. used to know the class for a AbstractClass or a Dependency
