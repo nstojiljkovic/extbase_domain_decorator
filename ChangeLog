@@ -1,3 +1,18 @@
+Version: 0.9.3
+Subject: [BUGFIX] Bring back broken ext in TYPO3 6.2 LTS due to PHP error
+Date:    2019-03-08 03:53:07 +0100
+Gitweb:  https://gerrit.essentialdots.com/gitweb?p=TYPO3CMS/Extensions/extbase_domain_decorator.git;a=commit;h=66c0705fdd6ffa8e0c54d8a3f43b7d3f99c4df93
+
+Fixes:
+* PHP Catchable Fatal Error: Argument 1 passed to EssentialDots\
+  ExtbaseDomainDecorator\Property\TypeConverter\PersistentObjectConverter
+  ::injectObjectContainer() must be an instance of TYPO3\CMS\Extbase\
+  Object\Container\Container, instance of EssentialDots\
+  ExtbaseDomainDecorator\Object\Container\Container given.
+
+Change-Id: I3961824eac463f29d18aef91b1174b39f2ac3566
+Related: #TP-4787
+
 Version: 0.9.2
 Subject: [BUGFIX] Fix PHP warnings related to declarations
 Date:    2018-08-13 10:03:37 +0200
